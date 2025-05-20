@@ -1,24 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Fingrid Data Visualization Dashboard
+
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+## Overview
+
+This is a Next.js-based web application that visualizes energy data from Fingrid's open data API. The application provides an interactive interface to explore various energy metrics such as electricity production, wind power production, and electricity consumption in Finland.
+
+## Features
+
+### Core Features
+- **Interactive Map Interface**: Visual representation of energy data points on a grid/map
+- **Data Visualization**: Real-time and historical data visualization using Recharts
+- **Responsive Design**: Works on both desktop and mobile devices
+- **Trend Analysis**: Shows percentage changes in data over time
+
+### Data Points
+1. **Electricity Production**
+   - Real-time measurements of total electricity production in Finland
+   - Data code: 192
+
+2. **Wind Power Production**
+   - Real-time measurements of wind power production
+   - Data code: 181
+
+3. **Electricity Consumption**
+   - Real-time measurements of electricity consumption
+   - Data code: 193
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js (v18 or later)
+- npm or yarn
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn
+   # or
+   pnpm install
+   ```
+
+3. Create a `.env` file in the root directory with the required environment variables:
+   ```
+   NEXT_PUBLIC_API_URL=your_api_url_here
+   NEXT_PUBLIC_API_KEY=your_api_key_here
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Technical Stack
+
+### Frontend
+- **Framework**: Next.js 15.3.2 with React 19
+- **UI Components**: Custom components with Radix UI primitives
+- **Styling**: Tailwind CSS with custom theming
+- **Data Visualization**: Recharts
+- **State Management**: Zustand
+- **Animation**: Framer Motion
+- **Icons**: Lucide React
+- **Date Handling**: date-fns
+
+### Backend
+- **Runtime**: Node.js
+- **API**: Next.js API Routes
+- **Data Fetching**: Axios
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   └── fingrid/           # API routes for Fingrid data
+│   ├── elements/
+│   │   └── DataOverview.jsx   # Data visualization component
+│   ├── page.js                # Main page component
+│   └── layout.js              # Root layout
+├── components/                # Reusable UI components
+└── lib/                       # Utility functions and configs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Available Scripts
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application for production
+- `npm start` - Start the production server
+- `npm run lint` - Run ESLint
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API Integration
+
+The application integrates with the Fingrid API to fetch real-time energy data. The API endpoints are proxied through Next.js API routes for security.
+
+### Available Endpoints
+
+- `/api/fingrid?endpoint={endpoint}` - Fetches data for the specified endpoint
+  - Query Parameters:
+    - `endpoint`: The Fingrid API endpoint (e.g., `192` for electricity production)
+
+## Data Flow
+
+1. User interacts with the map interface
+2. Clicking on a data point triggers a dialog
+3. The dialog fetches data from the Fingrid API via the Next.js API route
+4. Data is processed and displayed in an interactive chart
+5. Users can view trends and navigate to detailed views
+
+## Performance Considerations
+
+- Data is cached to minimize API calls
+- Images are optimized using Next.js Image component
+- Components are code-split for better load times
 
 ## Learn More
 
@@ -27,10 +134,16 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
