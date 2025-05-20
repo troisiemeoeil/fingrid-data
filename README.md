@@ -67,7 +67,7 @@ This is a Next.js-based web application that visualizes energy data from Fingrid
 ## Technical Stack
 
 ### Frontend
-- **Framework**: Next.js 15.3.2 with React 19
+- **Framework**: Next.js 15 with React 19
 - **UI Components**: Custom components with Radix UI primitives
 - **Styling**: Tailwind CSS with custom theming
 - **Data Visualization**: Recharts
@@ -126,23 +126,6 @@ The application integrates with the Fingrid API to fetch real-time energy data. 
 - Data is cached to minimize API calls
 - Images are optimized using Next.js Image component
 - Components are code-split for better load times
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ## License
 
