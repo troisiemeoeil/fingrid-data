@@ -1,103 +1,190 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { DataOverview } from "./elements/DataOverview";
+import useDialogStore from "./utils/store";
+import axios from "axios";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [zoomed, setZoomed] = useState(false);
+  const [lat, setLat] = useState(0); // Initial value of 0
+  const [long, setLong] = useState(0); // Initial value of 0
+  const [selectedCard, setSelectedCard] = useState(null); // New state to track which card is selected
+  const [selectedTitle, setSelectedTitle] = useState(null);
+  const [showHotspots, setShowHotspots] = useState(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const { open, setOpen } = useDialogStore();
+  const [data, setData] = useState(null);
+
+  function setLatLong(lat, long) {
+    setShowHotspots(false); // hide immediately on zoom in
+    setLat(lat);
+    setLong(long);
+    setZoomed(true); // trigger zoom
+  }
+  
+
+  useEffect(() => {
+    if (!open) {
+      setShowHotspots(false);
+      setZoomed(false); // Reset zoom when dialog is closed
+      setSelectedCard(null); // Reset the selected card when dialog is closed
+    }
+  }, [open]);
+
+
+
+
+  const overview = {
+    "Electricity Production": {
+      title: "Electricity Production",
+      description: " Electricity production in Finland based on the real-time measurements in Fingrid's operation control system.",
+      datacode: 192,
+      page:"electricity-production"
+    },
+    "Wind Power Production": {
+      title: "Wind Power Production",
+      description: "Wind power production based on the real-time measurements in Fingrid's operation control system.",
+      datacode: 181,
+      page:"wind-power-production"
+    },
+    "Electricity Consumption": {
+      title: "Electricity Consumption",
+      description: "Latest electricity consumption data in Finland based on the real-time measurements from energy companies.",
+      datacode: 193,
+      page:"electricity-consumption"
+    },
+  }
+
+  // Function to open the dialog and set the selected card
+  const handleCardClick = (cardTitle) => {
+    setSelectedCard(cardTitle); // Set the selected card title
+    setOpen(true); // Open the dialog
+  };
+
+
+  return (
+    <div className="grid h-screen bg-white grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col w-full h-screen row-start-2 items-center sm:items-start">
+
+        <div className="relative w-full h-full  ">
+          <motion.div
+            className="w-full h-full"
+            animate={{ scale: zoomed ? 1.7 : 1 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            style={{ transformOrigin: `${lat}% ${long}%` }}
+            onAnimationComplete={() => {
+              if (!zoomed) {
+                setShowHotspots(true); //
+              }
+            }}
           >
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/grid.png"
+              alt="Next.js logo"
+              width={1920}
+              height={1080}
+              className="w-full h-full object-cover"
+              sizes="(max-width: 768px) 100vw, 1920px"
+              srcSet="/grid.png 1920w, /grid@2x.png 3840w"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </motion.div>
+
+
+          {/* Hotspot 1: Power Breakdown */}
+          <DataOverview
+            top={20}
+            left={80}
+            open={selectedTitle === "Electricity Production"}
+            setOpen={(value) => {
+              if (!value) {
+                setSelectedTitle(null);
+                setZoomed(false);
+              } else {
+                setSelectedTitle("Electricity Production");
+              }
+            }}
+            title={overview["Electricity Production"]?.title}
+            description={overview["Electricity Production"]?.description}
+            endpoint={overview["Electricity Production"]?.datacode}
+            page={overview["Electricity Production"]?.page}
+            >
+            <div
+              className={`absolute top-[25%] left-[48.3%] transform -translate-x-1/2 -translate-y-1/2 z-50 cursor-pointer ${!showHotspots ? "hidden" : ""}`}
+              onClick={() => {
+                setLatLong(45, 20); // Set specific lat, long values
+                handleCardClick("Electricity Production"); // Open the Power Production dialog
+              }}
+            >
+              <div className="w-6 h-6 bg-red-500 rounded-full animate-ping opacity-75"></div>
+              <div className="absolute top-0 left-0 w-6 h-6 bg-red-600 rounded-full"></div>
+            </div>
+          </DataOverview>
+
+          {/* Hotspot 2: Carbon Intensity */}
+          <DataOverview
+            top={20}
+            left={60}
+            open={selectedTitle === "Wind Power Production"}
+            setOpen={(value) => {
+              if (!value) {
+                setSelectedTitle(null);
+                setZoomed(false);
+              } else {
+                setSelectedTitle("Wind Power Production");
+              }
+            }}
+            title={overview["Wind Power Production"]?.title}
+            description={overview["Wind Power Production"]?.description}
+            endpoint={overview["Wind Power Production"]?.datacode}
+            page={overview["Wind Power Production"]?.page}
+            >
+            <div
+              className={`absolute top-[13%] left-[21.5%] transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${!showHotspots ? "hidden" : ""}`}
+              onClick={() => {
+                setLatLong(10, 5); // Set lat, long for Carbon Intensity
+                handleCardClick("Wind Power Production"); // Open the Carbon Intensity dialog
+              }}
+            >
+              <div className="w-6 h-6 bg-red-500 rounded-full animate-ping opacity-75"></div>
+              <div className="absolute top-0 left-0 w-6 h-6 bg-red-600 rounded-full"></div>
+            </div>
+          </DataOverview>
+
+          {/* Hotspot 3: Power Consumption */}
+          <DataOverview
+            top={20}
+            left={48}
+            open={selectedTitle === "Power Consumption"}
+            setOpen={(value) => {
+              if (!value) {
+                setSelectedTitle(null);
+                setZoomed(false);
+              } else {
+                setSelectedTitle("Power Consumption");
+              }
+            }}
+            description={overview["Electricity Consumption"]?.description}
+            title={overview["Electricity Consumption"]?.title} 
+            endpoint={overview["Electricity Consumption"]?.datacode}
+            page={overview["Electricity Consumption"]?.page}
+            >
+            
+            <div
+              className={`absolute top-[70%] left-[60%] transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${!showHotspots ? "hidden" : ""}`}
+              onClick={() => {
+                setLatLong(60, 90); // Set lat, long for Power Consumption
+                handleCardClick("Power Consumption"); // Open the Power Consumption dialog
+              }}
+            >
+              <div className="w-6 h-6 bg-red-500 rounded-full animate-ping opacity-75"></div>
+              <div className="absolute top-0 left-0 w-6 h-6 bg-red-600 rounded-full"></div>
+            </div>
+          </DataOverview>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
