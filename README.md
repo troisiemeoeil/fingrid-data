@@ -111,7 +111,7 @@ The application integrates with the Fingrid API to fetch real-time energy data. 
 
 - `/api/fingrid?endpoint={endpoint}` - Fetches data for the specified endpoint
   - Query Parameters:
-    - `endpoint`: The Fingrid API endpoint (e.g., `192` for electricity production)
+    - `endpoint`: The Fingrid API endpoint (e.g. `192` for electricity production)
 
 ## Data Flow
 
@@ -129,4 +129,4 @@ The application integrates with the Fingrid API to fetch real-time energy data. 
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the MIT License.
