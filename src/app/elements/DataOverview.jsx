@@ -55,12 +55,9 @@ export function DataOverview({ children, title, open, setOpen, top, left, descri
 
 
         transformed.sort((a, b) => a.timestamp - b.timestamp);
-
-
         const midpoint = transformed.length - 5;
         const prev5 = transformed.slice(midpoint - 5, midpoint);
         const last5 = transformed.slice(midpoint);
-
         const sum = arr => arr.reduce((acc, item) => acc + item.value, 0);
         const prevSum = sum(prev5);
         const lastSum = sum(last5);

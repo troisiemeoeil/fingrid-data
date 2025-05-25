@@ -9,7 +9,7 @@ export async function GET(req) {
       });
     }
   
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}/data?pageSize=10`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}/data?pageSize=11`;
   
     try {
       const res = await fetch(apiUrl, {

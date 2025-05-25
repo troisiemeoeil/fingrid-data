@@ -9,9 +9,9 @@ import axios from "axios";
 
 export default function Home() {
   const [zoomed, setZoomed] = useState(false);
-  const [lat, setLat] = useState(0); // Initial value of 0
-  const [long, setLong] = useState(0); // Initial value of 0
-  const [selectedCard, setSelectedCard] = useState(null); // New state to track which card is selected
+  const [lat, setLat] = useState(0);
+  const [long, setLong] = useState(0); 
+  const [selectedCard, setSelectedCard] = useState(null); 
   const [selectedTitle, setSelectedTitle] = useState(null);
   const [showHotspots, setShowHotspots] = useState(true);
 
@@ -19,18 +19,18 @@ export default function Home() {
   const [data, setData] = useState(null);
 
   function setLatLong(lat, long) {
-    setShowHotspots(false); // hide immediately on zoom in
+    setShowHotspots(false); 
     setLat(lat);
     setLong(long);
-    setZoomed(true); // trigger zoom
+    setZoomed(true); 
   }
   
 
   useEffect(() => {
     if (!open) {
       setShowHotspots(false);
-      setZoomed(false); // Reset zoom when dialog is closed
-      setSelectedCard(null); // Reset the selected card when dialog is closed
+      setZoomed(false);
+      setSelectedCard(null); 
     }
   }, [open]);
 
@@ -60,8 +60,8 @@ export default function Home() {
 
   // Function to open the dialog and set the selected card
   const handleCardClick = (cardTitle) => {
-    setSelectedCard(cardTitle); // Set the selected card title
-    setOpen(true); // Open the dialog
+    setSelectedCard(cardTitle); 
+    setOpen(true); 
   };
 
 
